@@ -100,7 +100,7 @@ async function run() {
       continue;
     }
 
-    const selectedUrls = list.slice(0, 10);
+    const selectedUrls = list.slice(0, 45);
     console.log(`\nFetching ${selectedUrls.length} products for category: ${catSlug}`);
 
     for (const url of selectedUrls) {
