@@ -177,9 +177,9 @@ create policy "Admin products access" on public.products for all using (
 );
 
 -- Customer profile rule
-create policy "User profile access" on public.customers for all using (
-    auth.uid() = id or exists (select 1 from public.customers where id = auth.uid() and is_admin = true)
-);
+create policy "Allow authenticated select on customers" on public.customers for select using (auth.uid() is not null);
+create policy "Allow owner insert on customers" on public.customers for insert with check (auth.uid() = id);
+create policy "Allow owner update on customers" on public.customers for update using (auth.uid() = id);
 
 -- Order check rule
 create policy "User orders access" on public.orders for all using (
