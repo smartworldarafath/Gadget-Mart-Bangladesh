@@ -171,8 +171,20 @@ async function seed() {
     };
   });
 
-  console.log("Seeding products...");
-  const { data: prodRows, error: prodErr } = await supabase.from('products').upsert(productsToInsert, { onConflict: 'slug' }).select();
+  // Filter out items with duplicate slugs
+  const uniqueProductsToInsert = [];
+  const seenSlugs = new Set();
+  productsToInsert.forEach(p => {
+    if (!seenSlugs.has(p.slug)) {
+      seenSlugs.add(p.slug);
+      uniqueProductsToInsert.push(p);
+    } else {
+      console.log(`Skipping duplicate product slug: ${p.slug}`);
+    }
+  });
+
+  console.log(`Seeding products (${uniqueProductsToInsert.length} unique)...`);
+  const { data: prodRows, error: prodErr } = await supabase.from('products').upsert(uniqueProductsToInsert, { onConflict: 'slug' }).select();
   
   if (prodErr) {
     console.error("Error seeding products:", prodErr);
