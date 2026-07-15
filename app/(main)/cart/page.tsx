@@ -47,8 +47,12 @@ export default function CartPage() {
               >
                 {/* Product details */}
                 <div className="flex items-center gap-4 w-full sm:w-auto">
-                  <div className="w-16 h-16 bg-white border rounded-xl flex items-center justify-center shrink-0 text-[10px] font-bold text-gray-400 select-none">
-                    GMB
+                  <div className="w-16 h-16 bg-white border rounded-xl overflow-hidden p-1 flex items-center justify-center shrink-0">
+                    <img
+                      src={item.product?.thumbnail_url || item.product?.images?.[0] || '/placeholder.jpg'}
+                      alt={item.product?.name || ''}
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                   <div className="min-w-0">
                     <Link href={`/product/${item.product?.slug}`} className="text-sm font-bold text-gray-800 hover:text-primary transition-colors line-clamp-2 leading-tight">

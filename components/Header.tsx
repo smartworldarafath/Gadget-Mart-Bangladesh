@@ -128,7 +128,7 @@ export default function Header() {
 
           {/* Search Dropdown */}
           {showSearchDropdown && searchResults.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-gray-900 border border-gray-800 rounded-2xl shadow-2xl overflow-hidden z-50">
+            <div className="absolute top-full left-0 right-0 mt-2 bg-gray-900 border border-gray-800 rounded-2xl shadow-2xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
               <div className="p-2 border-b border-gray-800 text-xs text-gray-400 px-4">Search Results</div>
               <div className="max-h-[350px] overflow-y-auto">
                 {searchResults.map(prod => (
@@ -138,8 +138,12 @@ export default function Header() {
                     onClick={() => setShowSearchDropdown(false)}
                     className="flex items-center gap-3 p-3 hover:bg-gray-800 transition-colors border-b border-gray-800/50 last:border-0"
                   >
-                    <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center p-1 text-black font-semibold text-xs shrink-0">
-                      GMB
+                    <div className="w-10 h-10 bg-white rounded-lg overflow-hidden p-1 shrink-0">
+                      <img
+                        src={prod.thumbnail_url || prod.images?.[0] || '/placeholder.jpg'}
+                        alt={prod.name}
+                        className="w-full h-full object-contain"
+                      />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-white truncate">{prod.name}</p>
