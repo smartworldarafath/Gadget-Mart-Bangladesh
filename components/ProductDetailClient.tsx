@@ -60,26 +60,32 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
               </span>
             )}
             
-            <span className="text-gray-300 font-black text-6xl tracking-tighter">GMB</span>
+            <img
+              src={product.images?.[activeImage] || product.thumbnail_url || '/placeholder.jpg'}
+              alt={product.name}
+              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-350"
+            />
             
             {/* Overlay Grid lines for tech premium aesthetic */}
             <div className="absolute inset-0 bg-primary/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
           </div>
 
           {/* Thumbnail strip */}
-          <div className="flex gap-2">
-            {[1, 2, 3].map((img, idx) => (
-              <button
-                key={idx}
-                onClick={() => setActiveImage(idx)}
-                className={`w-20 h-20 bg-gray-50 border rounded-xl flex items-center justify-center text-xs text-gray-400 font-bold ${
-                  idx === activeImage ? 'border-primary' : 'border-gray-200'
-                }`}
-              >
-                GMB #{idx + 1}
-              </button>
-            ))}
-          </div>
+          {product.images && product.images.length > 0 && (
+            <div className="flex gap-2">
+              {product.images.map((img, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveImage(idx)}
+                  className={`w-20 h-20 bg-white border rounded-xl overflow-hidden p-1 flex items-center justify-center cursor-pointer transition-all ${
+                    idx === activeImage ? 'border-primary ring-2 ring-primary/10' : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <img src={img} alt={`${product.name} thumb ${idx}`} className="w-full h-full object-contain" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Right Side: Buying details panel */}

@@ -38,7 +38,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <div className="group relative bg-[#F8F9FA] border border-gray-100 hover:border-primary/30 rounded-2xl p-3 md:p-4 flex flex-col justify-between hover:shadow-xl hover:shadow-orange-500/[0.03] transition-all duration-300">
+    <div className="group relative bg-[#F8F9FA] border border-gray-100 hover:border-primary/30 rounded-2xl p-3 md:p-4 flex flex-col justify-between hover:shadow-2xl hover:shadow-orange-500/[0.06] hover:-translate-y-1.5 transition-all duration-350 ease-out">
       {/* Product Image & Badges */}
       <Link href={`/product/${product.slug}`} className="block relative w-full aspect-square bg-white rounded-xl overflow-hidden p-2">
         {/* Discount Badge */}
@@ -55,9 +55,13 @@ export default function ProductCard({ product }: ProductCardProps) {
           </span>
         )}
 
-        {/* Placeholder Thumbnail Grid */}
-        <div className="w-full h-full flex items-center justify-center relative overflow-hidden select-none bg-gray-50 rounded-lg">
-          <span className="text-gray-400 font-extrabold text-2xl tracking-tighter">GMB</span>
+        {/* Product Image */}
+        <div className="w-full h-full flex items-center justify-center relative overflow-hidden select-none bg-white rounded-lg">
+          <img
+            src={product.thumbnail_url || product.images?.[0] || '/placeholder.jpg'}
+            alt={product.name}
+            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+          />
           
           {/* Subtle zoom on hover */}
           <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">

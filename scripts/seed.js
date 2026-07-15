@@ -125,7 +125,7 @@ async function seed() {
   });
 
   const productsToInsert = earbuds.map((item, idx) => {
-    const slug = getSlug(item.name);
+    const slug = `${getSlug(item.name)}-${item.sl}`;
     const categorySlug = item.sl <= 30 ? 'wireless-headphone' : 'adapter';
     const category_id = catMap[categorySlug];
     const originalPrice = Math.round(item.price * 1.25); // 25% discount
@@ -171,20 +171,8 @@ async function seed() {
     };
   });
 
-  // Filter out items with duplicate slugs
-  const uniqueProductsToInsert = [];
-  const seenSlugs = new Set();
-  productsToInsert.forEach(p => {
-    if (!seenSlugs.has(p.slug)) {
-      seenSlugs.add(p.slug);
-      uniqueProductsToInsert.push(p);
-    } else {
-      console.log(`Skipping duplicate product slug: ${p.slug}`);
-    }
-  });
-
-  console.log(`Seeding products (${uniqueProductsToInsert.length} unique)...`);
-  const { data: prodRows, error: prodErr } = await supabase.from('products').upsert(uniqueProductsToInsert, { onConflict: 'slug' }).select();
+  console.log(`Seeding products (${productsToInsert.length} total)...`);
+  const { data: prodRows, error: prodErr } = await supabase.from('products').upsert(productsToInsert, { onConflict: 'slug' }).select();
   
   if (prodErr) {
     console.error("Error seeding products:", prodErr);
