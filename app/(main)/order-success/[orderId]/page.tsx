@@ -6,9 +6,9 @@ import { Order, OrderItem } from '@/lib/types'
 import { formatPrice } from '@/lib/utils'
 
 interface OrderSuccessPageProps {
-  params: {
+  params: Promise<{
     orderId: string
-  }
+  }>
 }
 
 async function getOrderDetails(orderId: string) {
@@ -35,7 +35,7 @@ async function getOrderDetails(orderId: string) {
       if (itemsData) items = itemsData
     }
   } catch (e) {
-    console.error("Failed to fetch order success page details:", e)
+    console.error("Failed to load order success page details:", e)
   }
 
   // Fallback order info for testing without database connection
@@ -83,7 +83,8 @@ async function getOrderDetails(orderId: string) {
 }
 
 export default async function OrderSuccessPage({ params }: OrderSuccessPageProps) {
-  const { order, items } = await getOrderDetails(params.orderId)
+  const { orderId } = await params
+  const { order, items } = await getOrderDetails(orderId)
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-12 text-center space-y-8 select-none">

@@ -5,9 +5,9 @@ import { Product, Category } from '@/lib/types'
 import CategoryClient from '@/components/CategoryClient'
 
 interface CategoryPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 async function getCategoryData(slug: string) {
@@ -73,7 +73,8 @@ async function getCategoryData(slug: string) {
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
-  const { category, products } = await getCategoryData(params.slug)
+  const { slug } = await params
+  const { category, products } = await getCategoryData(slug)
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">

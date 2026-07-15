@@ -5,9 +5,9 @@ import { Product } from '@/lib/types'
 import ProductDetailClient from '@/components/ProductDetailClient'
 
 interface ProductDetailPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 async function getProductData(slug: string) {
@@ -97,7 +97,8 @@ async function getProductData(slug: string) {
 }
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
-  const { product, relatedProducts } = await getProductData(params.slug)
+  const { slug } = await params
+  const { product, relatedProducts } = await getProductData(slug)
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">

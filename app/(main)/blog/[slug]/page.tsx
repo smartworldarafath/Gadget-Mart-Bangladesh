@@ -3,14 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 
 interface BlogPostPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
-export default function BlogPostPage({ params }: BlogPostPageProps) {
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
+  const { slug } = await params
   // Determine details based on slug
-  const title = params.slug === 'top-5-qcy-earbuds-bangladesh' 
+  const title = slug === 'top-5-qcy-earbuds-bangladesh' 
     ? 'Top 5 QCY Earbuds in Bangladesh (2025 Review)'
     : 'Why GaN Technology is Changing Wall Chargers Forever'
 
