@@ -68,3 +68,31 @@ h1, h2, h3, h4, h5, h6 {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* Premium 3D Perspective Tilt Classes */
+.card-3d-tilt {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s, border-color 0.6s;
+  transform-style: preserve-3d;
+  perspective: 1200px;
+}
+.card-3d-tilt:hover {
+  transform: translateY(-8px) rotateX(5deg) rotateY(-5deg);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  border-color: rgba(241, 126, 35, 0.3);
+}
+.card-3d-tilt-inner {
+  transform: translateZ(30px);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-3d-tilt:hover .card-3d-tilt-inner {
+  transform: translateZ(45px) scale(1.05);
+}
+
+/* Glassmorphism panel styles */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+

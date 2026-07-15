@@ -38,9 +38,9 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <div className="group relative bg-[#F8F9FA] border border-gray-100 hover:border-primary/30 rounded-2xl p-3 md:p-4 flex flex-col justify-between hover:shadow-2xl hover:shadow-orange-500/[0.06] hover:-translate-y-1.5 transition-all duration-350 ease-out">
+    <div className="group card-3d-tilt relative bg-[#F8F9FA] border border-gray-100 rounded-2xl p-3 md:p-4 flex flex-col justify-between transition-all duration-350 ease-out">
       {/* Product Image & Badges */}
-      <Link href={`/product/${product.slug}`} className="block relative w-full aspect-square bg-white rounded-xl overflow-hidden p-2">
+      <Link href={`/product/${product.slug}`} className="block card-3d-tilt-inner relative w-full aspect-square bg-white rounded-xl overflow-hidden p-2">
         {/* Discount Badge */}
         {isDiscounted && (
           <span className="absolute top-2 left-2 bg-discount-red text-white text-[10px] font-extrabold uppercase px-2 py-1 rounded-lg z-10 shadow-sm animate-pulse">

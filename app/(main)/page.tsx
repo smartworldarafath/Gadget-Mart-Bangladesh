@@ -28,6 +28,15 @@ async function getData() {
   let topSelling: Product[] = []
   let newArrivals: Product[] = []
 
+  // Category specific product arrays
+  let earbudsProducts: Product[] = []
+  let chargersProducts: Product[] = []
+  let watchesProducts: Product[] = []
+  let tabletsProducts: Product[] = []
+  let speakersProducts: Product[] = []
+  let gamingProducts: Product[] = []
+  let cablesProducts: Product[] = []
+
   try {
     const { data: catData } = await supabase
       .from('categories')
@@ -37,13 +46,13 @@ async function getData() {
     
     if (catData) categories = catData
 
+    // Load tabs data
     const { data: exclData } = await supabase
       .from('products')
       .select('*')
       .eq('is_active', true)
       .eq('is_exclusive_deal', true)
-      .limit(8)
-    
+      .limit(10)
     if (exclData) exclusiveDeals = exclData
 
     const { data: bdData } = await supabase
@@ -52,7 +61,6 @@ async function getData() {
       .eq('is_active', true)
       .eq('is_best_deal', true)
       .limit(8)
-    
     if (bdData) bestDeals = bdData
 
     const { data: tsData } = await supabase
@@ -61,7 +69,6 @@ async function getData() {
       .eq('is_active', true)
       .eq('is_top_selling', true)
       .limit(8)
-    
     if (tsData) topSelling = tsData
 
     const { data: naData } = await supabase
@@ -70,8 +77,42 @@ async function getData() {
       .eq('is_active', true)
       .eq('is_new_arrival', true)
       .limit(8)
-    
     if (naData) newArrivals = naData
+
+    // Load Category Specific arrays for Horizontal Sliders
+    const catMap: Record<string, string> = {};
+    categories.forEach(c => {
+      catMap[c.slug] = c.id;
+    });
+
+    if (catMap['wireless-headphone']) {
+      const { data } = await supabase.from('products').select('*').eq('category_id', catMap['wireless-headphone']).eq('is_active', true).limit(10)
+      if (data) earbudsProducts = data
+    }
+    if (catMap['adapter']) {
+      const { data } = await supabase.from('products').select('*').eq('category_id', catMap['adapter']).eq('is_active', true).limit(10)
+      if (data) chargersProducts = data
+    }
+    if (catMap['smart-watch']) {
+      const { data } = await supabase.from('products').select('*').eq('category_id', catMap['smart-watch']).eq('is_active', true).limit(10)
+      if (data) watchesProducts = data
+    }
+    if (catMap['tablet']) {
+      const { data } = await supabase.from('products').select('*').eq('category_id', catMap['tablet']).eq('is_active', true).limit(10)
+      if (data) tabletsProducts = data
+    }
+    if (catMap['speakers']) {
+      const { data } = await supabase.from('products').select('*').eq('category_id', catMap['speakers']).eq('is_active', true).limit(10)
+      if (data) speakersProducts = data
+    }
+    if (catMap['gaming']) {
+      const { data } = await supabase.from('products').select('*').eq('category_id', catMap['gaming']).eq('is_active', true).limit(10)
+      if (data) gamingProducts = data
+    }
+    if (catMap['cable']) {
+      const { data } = await supabase.from('products').select('*').eq('category_id', catMap['cable']).eq('is_active', true).limit(10)
+      if (data) cablesProducts = data
+    }
 
   } catch (e) {
     console.error("Supabase data fetch failed, using fallback empty states:", e)
@@ -82,28 +123,48 @@ async function getData() {
     exclusiveDeals,
     bestDeals,
     topSelling,
-    newArrivals
+    newArrivals,
+    earbudsProducts,
+    chargersProducts,
+    watchesProducts,
+    tabletsProducts,
+    speakersProducts,
+    gamingProducts,
+    cablesProducts
   }
 }
 
 export default async function HomePage() {
-  const { categories, exclusiveDeals, bestDeals, topSelling, newArrivals } = await getData()
+  const { 
+    categories, 
+    exclusiveDeals, 
+    bestDeals, 
+    topSelling, 
+    newArrivals,
+    earbudsProducts,
+    chargersProducts,
+    watchesProducts,
+    tabletsProducts,
+    speakersProducts,
+    gamingProducts,
+    cablesProducts
+  } = await getData()
 
   return (
-    <div className="space-y-6 md:space-y-10 pb-12">
+    <div className="space-y-8 md:space-y-12 pb-16">
       {/* Hero Banner Slider */}
       <HeroSlider />
 
       {/* Ribbon Trust Badges */}
       <TrustBadges />
 
-      {/* Sub-Banner Grid */}
+      {/* Sub-Banner Grid with 3D Tilt Wrapper */}
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-4">
         <Link 
           href="/category/wireless-headphone" 
-          className="relative block h-[140px] md:h-[180px] rounded-3xl overflow-hidden bg-gradient-to-r from-purple-900 to-indigo-950 hover:shadow-lg transition-shadow group"
+          className="relative card-3d-tilt block h-[140px] md:h-[180px] rounded-3xl overflow-hidden bg-gradient-to-r from-purple-900 to-indigo-950 hover:shadow-lg transition-shadow group"
         >
-          <div className="absolute inset-0 p-6 flex flex-col justify-center space-y-1 z-20">
+          <div className="absolute inset-0 p-6 flex flex-col justify-center space-y-1 z-20 card-3d-tilt-inner">
             <span className="text-[10px] uppercase font-bold tracking-widest text-primary">Limited Combo</span>
             <h3 className="text-xl md:text-2xl font-black text-white">QCY Earbuds Special</h3>
             <p className="text-xs text-gray-300">Premium active noise cancelling audio gear under ৳2,000.</p>
@@ -114,9 +175,9 @@ export default async function HomePage() {
 
         <Link 
           href="/category/adapter" 
-          className="relative block h-[140px] md:h-[180px] rounded-3xl overflow-hidden bg-gradient-to-r from-orange-500 to-red-600 hover:shadow-lg transition-shadow group"
+          className="relative card-3d-tilt block h-[140px] md:h-[180px] rounded-3xl overflow-hidden bg-gradient-to-r from-orange-500 to-red-600 hover:shadow-lg transition-shadow group"
         >
-          <div className="absolute inset-0 p-6 flex flex-col justify-center space-y-1 z-20">
+          <div className="absolute inset-0 p-6 flex flex-col justify-center space-y-1 z-20 card-3d-tilt-inner">
             <span className="text-[10px] uppercase font-bold tracking-widest text-white/90">Fast Charging</span>
             <h3 className="text-xl md:text-2xl font-black text-white">GaN Chargers Fest</h3>
             <p className="text-xs text-orange-100">Power up your workspace with multi-port high power adapters.</p>
@@ -153,7 +214,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Exclusive Deals (Horizontal Scroll) */}
+      {/* Exclusive Hot Deals */}
       {exclusiveDeals.length > 0 && (
         <section className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-end mb-6">
@@ -174,7 +235,133 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Featured Products Tabbed Section */}
+      {/* 1. Category Row: Wireless Headphones */}
+      {earbudsProducts.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-end mb-6">
+            <div>
+              <h2 className="text-xl md:text-2xl font-black tracking-tight text-gray-800 uppercase">Wireless Headphone & Earbuds</h2>
+              <p className="text-xs text-gray-500 mt-1">Immersive sound, true wireless audio gear</p>
+            </div>
+            <Link href="/category/wireless-headphone" className="text-xs text-primary font-bold hover:underline">View All</Link>
+          </div>
+
+          <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 -mx-4 px-4 snap-x">
+            {earbudsProducts.map((prod) => (
+              <div key={prod.id} className="w-[180px] md:w-[240px] shrink-0 snap-start">
+                <ProductCard product={prod} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 2. Category Row: Smart Watch */}
+      {watchesProducts.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-end mb-6">
+            <div>
+              <h2 className="text-xl md:text-2xl font-black tracking-tight text-gray-800 uppercase">Smart Watches & Fitness Bands</h2>
+              <p className="text-xs text-gray-500 mt-1">Track health, style your wrist</p>
+            </div>
+            <Link href="/category/smart-watch" className="text-xs text-primary font-bold hover:underline">View All</Link>
+          </div>
+
+          <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 -mx-4 px-4 snap-x">
+            {watchesProducts.map((prod) => (
+              <div key={prod.id} className="w-[180px] md:w-[240px] shrink-0 snap-start">
+                <ProductCard product={prod} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 3. Category Row: Adapters & Chargers */}
+      {chargersProducts.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-end mb-6">
+            <div>
+              <h2 className="text-xl md:text-2xl font-black tracking-tight text-gray-800 uppercase">Power Adapters & Fast Chargers</h2>
+              <p className="text-xs text-gray-500 mt-1">Fast charging adapters for laptops and phones</p>
+            </div>
+            <Link href="/category/adapter" className="text-xs text-primary font-bold hover:underline">View All</Link>
+          </div>
+
+          <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 -mx-4 px-4 snap-x">
+            {chargersProducts.map((prod) => (
+              <div key={prod.id} className="w-[180px] md:w-[240px] shrink-0 snap-start">
+                <ProductCard product={prod} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 4. Category Row: Tablets */}
+      {tabletsProducts.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-end mb-6">
+            <div>
+              <h2 className="text-xl md:text-2xl font-black tracking-tight text-gray-800 uppercase">Tablets & Accessories</h2>
+              <p className="text-xs text-gray-500 mt-1">iPads and tablets for work and play</p>
+            </div>
+            <Link href="/category/tablet" className="text-xs text-primary font-bold hover:underline">View All</Link>
+          </div>
+
+          <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 -mx-4 px-4 snap-x">
+            {tabletsProducts.map((prod) => (
+              <div key={prod.id} className="w-[180px] md:w-[240px] shrink-0 snap-start">
+                <ProductCard product={prod} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 5. Category Row: Speakers */}
+      {speakersProducts.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-end mb-6">
+            <div>
+              <h2 className="text-xl md:text-2xl font-black tracking-tight text-gray-800 uppercase">Speakers & Home Audio</h2>
+              <p className="text-xs text-gray-500 mt-1">Fill the room with rich, immersive audio</p>
+            </div>
+            <Link href="/category/speakers" className="text-xs text-primary font-bold hover:underline">View All</Link>
+          </div>
+
+          <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 -mx-4 px-4 snap-x">
+            {speakersProducts.map((prod) => (
+              <div key={prod.id} className="w-[180px] md:w-[240px] shrink-0 snap-start">
+                <ProductCard product={prod} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 6. Category Row: Gaming */}
+      {gamingProducts.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-end mb-6">
+            <div>
+              <h2 className="text-xl md:text-2xl font-black tracking-tight text-gray-800 uppercase">Pro Gaming & Components</h2>
+              <p className="text-xs text-gray-500 mt-1">Processors, GPUs, monitors and gaming controllers</p>
+            </div>
+            <Link href="/category/gaming" className="text-xs text-primary font-bold hover:underline">View All</Link>
+          </div>
+
+          <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 -mx-4 px-4 snap-x">
+            {gamingProducts.map((prod) => (
+              <div key={prod.id} className="w-[180px] md:w-[240px] shrink-0 snap-start">
+                <ProductCard product={prod} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Tabbed Best Deals / Top Selling / New Arrivals */}
       <section className="max-w-7xl mx-auto px-4">
         <HomeTabs 
           bestDeals={bestDeals}
